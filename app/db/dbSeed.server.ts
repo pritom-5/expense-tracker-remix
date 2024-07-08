@@ -1,11 +1,11 @@
-import getDb from "./getdb.server";
+import getDb from "./getdb.server"
+
 
 async function createUsersTable() {
 	const db = await getDb();
-
 	const create_users_table_raw = 
 		`
-				CREATE TABLE  "users" (
+				CREATE TABLE IF NOT EXISTS "users" (
 					"user_id"	INTEGER NOT NULL UNIQUE,
 					"username"	TEXT NOT NULL,
 					"email"	TEXT NOT NULL UNIQUE,
@@ -16,20 +16,6 @@ async function createUsersTable() {
 				);
 	`
 
-	console.log("trigger - 2");
-
-	try {
-		await db.exec(create_users_table_raw);
-	} catch (error) {
-		console.log(error);
-	}
-
-	await db.close();
-}
-createUsersTable();
-
-async function createUpdateAtTriggerForUsersTable() {
-	const db = await getDb();
 
 	const users_table_update_at_trigger = 
 		`
@@ -42,16 +28,16 @@ async function createUpdateAtTriggerForUsersTable() {
 			END;
 		`
 
-	console.log("trigger - 1");
 
 	try {
-				await db.exec(users_table_update_at_trigger);
-
-	} catch (err) {
-		console.log(err);
-		
+		await db.exec(create_users_table_raw);
+		await db.exec(users_table_update_at_trigger);
+	} catch (error) {
+		console.log(error);
 	}
-	
-	db.close();
+
+	await db.close();
 }
-createUpdateAtTriggerForUsersTable();
+
+createUsersTable();
+
