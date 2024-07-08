@@ -13,9 +13,6 @@ export default async function getDb () {
 		driver: sqlite3.Database
 	})
 
-	console.log(process.env.DB_SQLITE);
-	
-
 	return db
 }
 
