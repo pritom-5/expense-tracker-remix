@@ -23,6 +23,8 @@ export async function isUserAlreadyExists(userInfo: Pick<TUser, "email">): Promi
 
 
 
+
+
 export type TRegisterFormError = {
 	username?: string,
 	email?: string,
@@ -62,3 +64,65 @@ export async function addNewUserToDb(userInfo: Pick<TUser, "username" | "email"|
 		throw new Error ("Couldn't connect to db. Try again");
 	}
 }
+
+
+
+
+
+
+
+export type TLoginFormError = Pick<TRegisterFormError, "email" | "password">
+export type TCheckUserValidityAfterLogin = {
+	userId: number | null,
+	error: TLoginFormError | null
+}
+
+
+export async function checkUserValidityAfterLogin (userInfo: Pick<TUser, "email"| "password">) : Promise<TCheckUserValidityAfterLogin>  {
+	// get user info from db using email
+	const db_query_get_user_info_with_email = `SELECT * FROM users WHERE email=?`;
+	const db = await getDb();
+
+
+	try {
+		const stmt = await db.prepare(db_query_get_user_info_with_email);
+		const db_response = await stmt.get(userInfo.email);
+
+		if (!db_response) {
+			const user_not_found_error: TLoginFormError = {email: "email not valid", password: "enter valid password"}; 
+			return {userId: null, error: user_not_found_error};
+		}
+
+
+		// check passowrd and send some error
+		if (db_response.password !== userInfo.password) {
+			const user_not_found_error: TLoginFormError = {password: "enter valid password"}; 
+			return {userId: null, error: user_not_found_error};
+		}
+		
+
+		await stmt.finalize();
+		await db.close();
+
+		return {userId: db_response.user_id, error: null}
+		
+	} catch (error) {
+		throw new Error ("Error connecting to the db. Try again.")
+		
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

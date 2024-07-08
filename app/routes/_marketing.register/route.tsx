@@ -1,6 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Form, json, redirect, useActionData } from "@remix-run/react";
-import { addNewUserToDb } from "~/db/dbQueries.server";
+import { addNewUserToDb } from "~/db/dbUserQueries.server";
 import { getCookieHeaderWithUserInfo } from "~/sessions/authSessions.server";
 
 
@@ -8,11 +8,11 @@ export async function action ({request}: ActionFunctionArgs) {
 	// TODO: remove dummy data from here
 	const response = await addNewUserToDb({email: "user_2", password: "user_2_pass", username: "user_2"});
 
-	if (response && !!response.error) {
+	if (response && !!response.error || response.userId === null) {
 		return json({error: response.error});
 	}
 
-	const cookie_header = await getCookieHeaderWithUserInfo("1")
+	const cookie_header = await getCookieHeaderWithUserInfo(response.userId)
 
 	return redirect("/expenses", {
 		headers: {
@@ -25,8 +25,6 @@ export async function action ({request}: ActionFunctionArgs) {
 export default function Component () {
 	const action_data = useActionData<typeof action>();
 
-	console.log("action_data from register: ", action_data);
-	
 
 	return (
 		<div>
