@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { NavLink, Outlet, redirect, useFetcher } from "@remix-run/react";
-import { expensesGuard } from "~/guards/expenses_guard";
+import { expensesGuard } from "~/guards/expensesGuard.server";
 
 export async function loader ({request}: LoaderFunctionArgs) {
 	const userId = await expensesGuard(request)

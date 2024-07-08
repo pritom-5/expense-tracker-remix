@@ -1,6 +1,6 @@
 import { ActionFunctionArgs } from "@remix-run/node";
 import { Form, redirect } from "@remix-run/react";
-import { getCookieHeaderWithUserInfo } from "~/sessions/auth_sessions";
+import { getCookieHeaderWithUserInfo } from "~/sessions/authSessions.server";
 
 
 export async function action ({request}: ActionFunctionArgs) {

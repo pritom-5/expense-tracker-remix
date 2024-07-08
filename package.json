@@ -8,7 +8,8 @@
     "dev": "remix vite:dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+		"db:seed": "pnpx tsx app/db/dbSeed.server.ts"
   },
   "dependencies": {
     "@remix-run/node": "^2.10.2",
@@ -16,7 +17,9 @@
     "@remix-run/serve": "^2.10.2",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.10.2",

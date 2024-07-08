@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/react";
-import { getUserIdFromCookie } from "~/sessions/auth_sessions";
+import { getUserIdFromCookie } from "~/sessions/authSessions.server";
 
 export async function expensesGuard (request: Request) {
 	try {

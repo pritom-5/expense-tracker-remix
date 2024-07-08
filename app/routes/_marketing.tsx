@@ -7,7 +7,7 @@ export default function Component () {
 			<nav>
 				<NavLink to={"/"}>LOGO</NavLink>
 				<div>
-					<NavLink to={"/Home"}>Home</NavLink>
+					<NavLink to={"/"}>Home</NavLink>
 					<NavLink to={"/prices"}>Prices</NavLink>
 				</div>
 					<NavLink to={"/login"}>Login</NavLink>
