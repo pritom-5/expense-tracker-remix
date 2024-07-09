@@ -13,7 +13,7 @@ const {getSession, commitSession, destroySession} = createCookieSessionStorage(
 )
 
 
-export async function getCookieHeaderWithUserInfo (userId: string) {
+export async function getCookieHeaderWithUserInfo (userId: number) {
 	const session = await getSession()
 	session.set("userId", userId)  
 
@@ -35,3 +35,4 @@ export async function getCookieHeaderAfterDestroyingAuthSession(request: Request
 	const cookie_header = await destroySession(session)
 	return cookie_header
 }
+
