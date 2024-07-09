@@ -1,9 +1,10 @@
 import { json, LoaderFunctionArgs } from "@remix-run/node";
-import { NavLink, useLoaderData } from "@remix-run/react";
+import { Link, NavLink, useFetcher, useLoaderData } from "@remix-run/react";
 import { getAllExpensesFromDb } from "~/db/dbExpensesQueries.server";
 import { getUserIdFromCookie } from "~/sessions/authSessions.server";
 
 export default function Component () {
+	const fetcher = useFetcher();
 	const loader_data = useLoaderData<typeof loader>();
 
 
@@ -16,7 +17,16 @@ export default function Component () {
 
 				<ul>
 					{loader_data.expenses.map(expense => (
-						<li key={expense.expense_id}>{JSON.stringify(expense)}</li>					
+						<li key={expense.expense_id}>
+							<p>{JSON.stringify(expense)}</p>	
+
+							<Link to={`/expenses/${expense.expense_id}`}>Edit</Link>
+
+							<fetcher.Form method="DELETE" action={`/expenses/${expense.expense_id}`}>
+								<button type="submit">Delete expense</button>
+							</fetcher.Form>
+							<hr/>
+						</li>					
 						))
 					}
 				

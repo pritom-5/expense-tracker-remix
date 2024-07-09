@@ -40,9 +40,6 @@ export async function getAllExpensesFromDb(expense_info: Pick<TExpense, "user_id
 		const all_expenses = await stmt.all(expense_info.user_id);
 
 
-		console.log("all_expenses query page: ", all_expenses);
-		
-
 		await stmt.finalize();
 		await db.close();
 
@@ -70,10 +67,6 @@ export async function getSingleExpenseFromDb(expense_info: Pick<TExpense, "expen
 	try {
 		const single_expense = await stmt.get(expense_info.user_id, expense_info.expense_id);
 
-
-		console.log("single_expense query page: ", single_expense);
-		
-
 		await stmt.finalize();
 		await db.close();
 
@@ -91,7 +84,7 @@ type TUpdateExpenseResponse = {
 	error: string,
 }
 
-export async function updateExpenseInfoToDb (updated_expense_info: Pick<TExpense, "title" | "amount">) {
+export async function updateExpenseInfoToDb (updated_expense_info: Pick<TExpense, "title" | "amount" | "expense_id" | "user_id">) {
 	const db = await getDb();
 
 	const update_single_expense_query = `
@@ -103,11 +96,9 @@ export async function updateExpenseInfoToDb (updated_expense_info: Pick<TExpense
 	const amount_in_pence =  changeDollerToPence(updated_expense_info.amount)
 
 	try {
-		// TODO: check if expense exists
-		const response_from_db = await stmt.run(updated_expense_info.title, amount_in_pence);
+		const response_from_db = await stmt.run(updated_expense_info.title, amount_in_pence, updated_expense_info.expense_id, updated_expense_info.user_id);
 
-
-		console.log("response_from_db query page: ", response_from_db);
+		// TODO: some sort of error message if changes: 0
 		
 
 		await stmt.finalize();
@@ -118,6 +109,40 @@ export async function updateExpenseInfoToDb (updated_expense_info: Pick<TExpense
 	}
 	
 }
+
+
+
+
+export async function deleteExpenseFromDb (expense_info: Pick<TExpense, "expense_id" | "user_id">) {
+	const db = await getDb();
+
+	const delete_single_expense_query = `
+				DELETE FROM expenses WHERE user_id=? and expense_id=?;
+		`
+
+	const stmt = await db.prepare(delete_single_expense_query);
+
+	try {
+		const response_from_db = await stmt.run(expense_info.user_id, expense_info.expense_id);
+		// TODO: some sort of error message if changes: 0
+
+		await stmt.finalize();
+		await db.close();
+
+	} catch (err) {
+		throw new Error ("Couldn't connect to db. Try again");
+	}
+	
+}
+
+
+
+
+
+
+
+
+
 
 
 
