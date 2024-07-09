@@ -28,7 +28,7 @@ export default function Component () {
 
 export async function action ({request}: ActionFunctionArgs) {
 	// TODO: remove dummy data
-	const login_response = await checkUserValidityAfterLogin({email: "user_2", password: "user_2_pass"});
+	const login_response = await checkUserValidityAfterLogin({email: "one_email", password: "one_pass"});
 
 	if (login_response && !!login_response.error || !login_response.userId) {
 		return json({error: login_response.error});
